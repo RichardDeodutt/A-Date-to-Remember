@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
 #For random related functions
-from operator import truediv
 import random
 
 #For time related functions
