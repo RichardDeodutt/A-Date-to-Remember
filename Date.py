@@ -134,6 +134,7 @@ def Pick(Prompt, List):
         UserSelection = 1
     #Remove 1 to correct it
     UserSelection-=1
+    #If user selected out of bounds pick the first thing but if it's okay return their selection
     if UserSelection > len(List)-1 or UserSelection < 0:
         print("Your selection does not seem right let me pick for you then")
         return 0
@@ -163,15 +164,25 @@ def ListofDictVal(DictList,Identifier,Sub=False):
 
 #Order at a resturant
 def Order(Resturant):
+    #List of the menu item names
     Items = ListofDictVal(Resturant["menu"],"item",True)
+    #List of the the menu item prices
     Prices = ListofDictVal(Resturant["menu"],"cost",True)
+    #List of the menu with item names and prices goes here
     Menu=[]
+    #List of the items user orders goes here, represented by array indexes
     YourOrder=[]
+    #List of the items the date orders goes here, represented by array indexes
     YourDatesOrder=[]
+    #The total of the users order before tip
     YourTotal=0
+    #The total of the dates order before tip
     YourDatesTotal=0
+    #The total cost of everything goes here including tip
     Total=0
+    #The percentage of the tip to be added to the bill
     TipPercent=Resturant["tip"]
+    #Create the menu with the item name and the prices
     for Index in range(0,len(Items)-1):
         Item=Items[Index]
         if Prices[Index] == 0:
@@ -179,8 +190,11 @@ def Order(Resturant):
         else:
             Price = "$"+str(Prices[Index])
         Menu.append(Item+" "+Price)
+    #Option to finish ordering
     Menu.append("Done Ordering")
+    #Option to redo the order
     Menu.append("Redo Order")
+    #While loop to handle ordering
     while True:
         Choice=Pick("What Items would you like to order?",Menu)
         if Menu[Choice] == "Done Ordering":
@@ -192,22 +206,27 @@ def Order(Resturant):
         print("Your order so far is: ")
         for Selection in YourOrder:
             print(Menu[Selection])
+    #The final items ordered by the user
     print("Your final order is: ")
     for Selection in YourOrder:
         YourTotal += Prices[Selection]
         print(Menu[Selection])
+    #Randomly select a random number of items the date orders and show their final order
     print("Your date's final order is: ")
     for Index in range(0,random.randint(0,6)):
         Selection = random.randint(1,len(Items)-1)-1
         YourDatesOrder.append(Selection)
         YourDatesTotal += Prices[Selection]
         print(Menu[Selection])
+    #Assign the total to the combined total of the user and the date
     Total = YourTotal+YourDatesTotal
     #print("Your Total: ",YourTotal)
     #print("Dates Total: ",YourDatesTotal)
     #print("Total Before Tip: ",Total)
+    #Add in the tip to the total
     Total = Total + Total*TipPercent
     #print("Total with Tip: ",Total)
+    #Return the total
     return Total
 
 #The main function
@@ -333,6 +352,9 @@ def main():
     DelayPrint("After greetings and small talk you look at the menu.",5,"\n")
     #You and your date order your meals and the bill is calculated
     Bill=Order(Resturant)
+
+
+    #Grace or prayer before eating
     DelayPrint("After ordering and waiting your meal arrives.",5,"\n")
     DelayPrint("Before you and "+BlindDate+" eat your meals...you must say...",5,"\n")
     DelayPrint("Rub-a-dub-dub...",5,"\n")
@@ -348,7 +370,7 @@ def main():
 
 
 
-    #Create the Bill Paying options available
+    #Create the bill paying options available based on the users money
     if Bill < Money:
         PayOptions.append("You cover the bill")
     if Bill/2 < Money:
@@ -356,51 +378,63 @@ def main():
     PayOptions.append("Your date covers the bill")
 
 
-    #Paying the bill
+    #Paying the bill then check how much money the user has then go home
     DelayPrint("As your date comes to the end the bill arrives...",5,"\n")
     DelayPrint("When you glance at the bill you see it's $"+str(Bill)+"...",5,"\n")
     DelayPrint("You remember you have $"+str(Money)+"...",5,"\n")
     PayMethod=PayOptions[Pick("What will you do to pay?",PayOptions)]
     if PayMethod == "You cover the bill":
+        #User pays the full bill
         print("You cover the bill of $"+str(Bill)+".")
         Money-=Bill
     elif PayMethod == "You spit the bill with your date":
+        #User pays half the bill, splitting it with the date
         print("You split the bill of $"+str(Bill)+" with",BlindDate,".")
         Money-=Bill/2
     elif PayMethod == "Your date covers the bill":
+        #Date pays the full bill
         print("Your date",BlindDate,"covers the bill of $"+str(Bill)+".")
+    #Round the users money to 2 digits
     Money=round(Money,2)
+    #Print out how much money the user has
     DelayPrint("After this date you have $"+str(Money)+" left.",5,"\n")
     DelayPrint("The date ends and you both go home.",5,"\n")
 
 
 
-    #The Future
+    #The Future of the user and the blind date based on this date
     if UserFeels == "terrible":
+        #User feels terrible so no second date
         DelayPrint("You did not enjoy your date with "+BlindDate+".",5,"\n")
         DelayPrint("You won't do a second date with "+BlindDate+".",5,"\n")
         exit(1)
     elif UserFeels == "bad":
         if PayMethod == "Your date covers the bill":
+            #User feels bad but didn't pay so may want a second date
             DelayPrint("You did not enjoy your date with "+BlindDate+".",5,"\n")
             DelayPrint("You may want to do a second date with "+BlindDate+".",5,"\n")
         else:
+            #User feels bad and paid for it so no second date
             DelayPrint("You did not enjoy your date with "+BlindDate+".",5,"\n")
             DelayPrint("You won't do a second date with "+BlindDate+".",5,"\n")
             exit(1)
     elif DateFeels == "terrible":
+        #Date feels terrible so no second date
         DelayPrint("It seems like "+BlindDate+" did not enjoy the date with you.",5,"\n")
         DelayPrint(BlindDate+" won't do a second date with you.",5,"\n")
         exit(1)
     elif DateFeels == "bad":
         if PayMethod == "You cover the bill":
+            #Date feels bad but didn't pay so may want a second date
             DelayPrint("It seems like "+BlindDate+" did not enjoy the date with you.",5,"\n")
             DelayPrint(BlindDate+" may want to do a second date with you.",5,"\n")
         else:
+            #Date feels bad and paid for it so no second date
             DelayPrint("It seems like "+BlindDate+" did not enjoy the date with you.",5,"\n")
             DelayPrint(BlindDate+" won't do a second date with you.",5,"\n")
             exit(1)
     else:
+        #Both the user and the date feels good enough for a second date
         DelayPrint("It seems like you and "+BlindDate+" enjoyed the date.",5,"\n")
         DelayPrint("There is a second date in your futures.",5,"\n")
 
