@@ -78,7 +78,7 @@ def GetMoney():
         print("Oh so you are broke then...with $0")
         return 0
 
-#Yes and no Prompt
+#Yes or no Prompt
 def YNPromt(Prompt):
     UserInput=input(Prompt+" Y/N: ")
     if UserInput[0].lower() == "y":
@@ -144,22 +144,38 @@ def Pick(Prompt, List):
 #Returns a list of values from a list of dictionaries using a identifier
 #Can go down a level if it finds a sub dictionary to find find sub items of a main item
 def ListofDictVal(DictList,Identifier,Sub=False):
+    #The final list to return
     List=[]
+    #Go through the list of dictionaries
     for Item in DictList:
+        #Ignore everything but dictionaries in the list
         if isinstance(Item,dict):
+            #If the Sub flag is true check for the sub key in the keys list to see if there is a sub dictionary list
             if Sub and "sub" in Item.keys():
+                #We have a sub entry
+                #Check if the thing we are searching for is in the keys list on the main layer
                 if Identifier in Item.keys():
+                    #Found it, this is the main item from the main layer
                     MainItemVal = Item[Identifier]
+                #Go through the sub entry list of dictionaries
                 for SubItem in Item["sub"]:
+                    #Check if the thing we are searching for is in the keys lists on the sub layer
                     if Identifier in SubItem.keys():
+                        #Found it, this is the sub item from the sub layer
                         SubItemVal = SubItem[Identifier]
+                    #If we have a main and sub item it's time to combine it to make a new item
                     if MainItemVal != None and SubItemVal != None:
+                        #Spacer that makes it easier to combine two numbers
                         Spacer = 0
+                        #If the main item value is a string use a space as the spacer instead to combine strings
                         if isinstance(MainItemVal,str):
                             Spacer = " "
+                        #Combine and add to the final list
                         List.append(MainItemVal+Spacer+SubItemVal)
+            #This is if there is no sub layer and it was found on the main layer so just addd it
             elif Identifier in Item.keys():
                 List.append(Item[Identifier])
+    #Return the final list
     return List
 
 #Order at a resturant
