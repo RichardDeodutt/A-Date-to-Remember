@@ -69,7 +69,7 @@ def GetMoney():
     #converting to int can fail and crash the program so just assume they are broke instead
     try:
         #Ask how much money the user has and convert it to int
-        Money=int(input("Around how much money do you have with you?(Number Only) "))
+        Money=int(input("Around how much money do you have with you?(Numbers Only): "))
         #Tell the user how much they have
         print("You have $"+str(Money),"with you.")
         return Money
@@ -96,7 +96,7 @@ def Welcome(PeopleNames):
     #Get the user's first name
     User=GetUser()
     #Welcome the user using their first name
-    print("Hello,",User,"get ready for your bind date!")
+    print("Hello,",User,"get ready for your blind date!")
     #Ask how much money they are carrying
     Money=GetMoney()
     #Ask if user is part of cohort 3
@@ -105,7 +105,10 @@ def Welcome(PeopleNames):
         #Special message for Cohort 3 members
         print("Enjoy your date with your classmate!")
         #Remove the user from the list of people, No dating yourself allowed
-        PeopleNames.remove(User)
+        if User in PeopleNames:
+            PeopleNames.remove(User)
+        else:
+            DelayPrint("LIAR!!!",2.5,"\n")
     #Randomly select a blind date for the user
     BlindDate=random.choice(tuple(PeopleNames))
     #return the data gathered as a list
@@ -279,7 +282,7 @@ def main():
 
 
     #Select the resturant the date was planned at
-    Resturant=Resturants[Pick("Which Resturant is your date at?(Number Only)",ListofDictVal(Resturants,"name"))]
+    Resturant=Resturants[Pick("Which Resturant is your date at?(Numbers Only):",ListofDictVal(Resturants,"name"))]
     #telling the user their resturant selection
     print("Lets go to",Resturant["name"],"to meet your blind date!")
     #Gets the cost of the ride
